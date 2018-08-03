@@ -9,7 +9,9 @@ from rest_framework.response import Response #對django response的包裝
 from .serializers import ArticalSerializer,UsersSerializer # 引入寫好的包裝
 from rest_framework import status
 from rest_framework import viewsets
+
 # ALLLIST start
+# 1 普通 APIView
 # class AllList(APIView):
 #     def get(self,request,format = None):
 #         lists = Artical.objects.all()
@@ -17,14 +19,25 @@ from rest_framework import viewsets
 #         return Response(lists_serializer.data)
 
 
-class AllList(generics.ListAPIView):
+
+# 2 ListAPIView
+#class AllList(generics.ListAPIView):
+    # def get(self,request,*args,**kwargs):
+    #     return self.list(request,*args,**kwargs) #ListAPIView 封裝了Response
+
     #ListAPIView 幫助返回def get（）數據 並且分頁可用
+    # queryset = Artical.objects.all()
+    # serializer_class = ArticalSerializer
+
+# 3 viewsets配合restful router使用
+# mixins.xxModelMixin 获取数据的各种方式
+#  viewsets有很多ViewSet 對應不同請求獲取的數據
+class AllList(mixins.RetrieveModelMixin,mixins.ListModelMixin,viewsets.GenericViewSet):
     queryset = Artical.objects.all()
     serializer_class = ArticalSerializer
 
-    # def get(self,request,*args,**kwargs):
-    #     return self.list(request,*args,**kwargs) #ListAPIView 封裝了Response
-#ALLLIST end
+
+# ALLLIST end
 
 
 # UsersApi start
@@ -41,7 +54,9 @@ class AllList(generics.ListAPIView):
 #             return Response(data.data,status=status.HTTP_201_CREATED)
 #         return Response(data.errors,status=status.HTTP_400_BAD_REQUEST)
 
-class UsersApi(generics.ListAPIView):
+#ListAPIView only get()
+#ListCreateAPIView can post()
+class UsersApi(generics.ListCreateAPIView):
     queryset = Users.objects.all()
     serializer_class = UsersSerializer
 

@@ -4,10 +4,8 @@ from DjangoUeditor.models import UEditorField
 
 class NewsCategory(models.Model):
     category_text = models.CharField(max_length=20,default='国内新闻')
-
     def __str__(self):
         return self.category_text
-
     class Meta:
         #站點顯示名稱
         verbose_name_plural='分類'
@@ -20,7 +18,6 @@ class Users(models.Model):
 
     class Meta:
         verbose_name_plural='用戶'
-
     def __str__(self):
         return self.name
 
@@ -49,12 +46,12 @@ class Artical(models.Model):
 
 
 class Vote(models.Model):
-    user_id= models.ForeignKey('Users',on_delete=models.DO_NOTHING)
-    isVote = models.BooleanField(default=False)
+    user_id= models.ForeignKey(Users,on_delete=models.DO_NOTHING,blank=True,null=True)
+    status = models.BooleanField(default=False)
     comment = models.TextField(null=False,max_length=500,blank=True)
     category = models.ForeignKey(Artical, related_name="comments",on_delete=models.DO_NOTHING,blank=True,null=True)
     def __str__(self):
-        return str(self.bbs_id)
+        return str(self.category)
     class Meta:
         verbose_name_plural='點贊'
 

@@ -24,16 +24,16 @@ from . import settings
 from rest_framework.documentation import  include_docs_urls
 
 router = routers.DefaultRouter()
-# router.register(r'users', views.UserViewSet)
-# router.register(r'groups', views.GroupViewSet)
+router.register('list', views.AllList) #註冊list路由
+
 
 # 使用自动URL路由连接我们的API。
 # 另外，我们还包括支持浏览器浏览API的登录URL。
 urlpatterns = [
+    url(r'^', include(router.urls)),
     path('admin/', admin.site.urls),
     url(r'^ueditor/',include('DjangoUeditor.urls' )),
     url('', include('quickstart.urls')),
-    # url(r'^', include(router.urls)),
     url('api-auth/',include('rest_framework.urls')), #登錄api
     url('docs/',include_docs_urls(title='apis'))
 ]

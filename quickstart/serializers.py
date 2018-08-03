@@ -1,29 +1,6 @@
 from rest_framework import serializers
 from .models import Artical,Users,NewsCategory,Vote
 
-
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = NewsCategory
-        fields = '__all__'
-        #fields = ('id','category_text')
-
-class VoteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Vote
-        fields = '__all__'
-
-class ArticalSerializer(serializers.ModelSerializer):
-    # 可將外鍵做ModelSerializer 然後外鍵實例化後  ModelSerializer字段將返回外鍵所有信息
-    category=CategorySerializer()
-    comments = VoteSerializer(many=True,read_only=True)
-    class Meta:
-        model = Artical
-        # fields = '__all__'
-        fields = ('id','title','created_time','content','img','category','comments')
-
-
-
 # class UsersSerializer(serializers.Serializer):
 #     #可以指明字段 POST時檢查字段 存儲
 #     id=serializers.IntegerField(read_only=True)
@@ -42,5 +19,30 @@ class UsersSerializer(serializers.ModelSerializer):
     # ModelSerializer 幫我們完成上步的功能
     class Meta:
         model = Users
-        #fields = '__all__'
-        fields = ('id','name','password','mobile')
+        fields = '__all__'
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NewsCategory
+        fields = '__all__'
+        #fields = ('id','category_text')
+
+class VoteSerializer(serializers.ModelSerializer):
+    # 需要外键的对应属性 = rializers.CharField(source='本字段外键名.属性')
+    user_name = serializers.CharField(source='user_id.name')
+    class Meta:
+        model = Vote
+        fields = ('id','comment','user_name','status')
+
+class ArticalSerializer(serializers.ModelSerializer):
+    # 可將外鍵做ModelSerializer 然後外鍵實例化後  ModelSerializer字段將返回外鍵所有信息
+    category=CategorySerializer()
+    comments = VoteSerializer(many=True,read_only=True)
+    class Meta:
+        model = Artical
+        # fields = '__all__'
+        fields = ('id','title','created_time','content','img','category','comments')
+
+
+
